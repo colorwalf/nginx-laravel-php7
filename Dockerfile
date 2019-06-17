@@ -204,6 +204,7 @@ RUN echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repo
     docker-php-ext-install iconv pdo_mysql pdo_sqlite pgsql pdo_pgsql mysqli gd exif intl xsl json soap dom zip opcache pcntl && \
     pecl install xdebug-2.7.0RC1 && \
     pecl install -o -f redis && \
+    pecl install inotify && \
     echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini && \
     docker-php-source delete && \
     mkdir -p /etc/nginx && \
@@ -222,9 +223,13 @@ RUN echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repo
 ADD build_swoole_so.sh /root/
 RUN sh /root/build_swoole_so.sh
 RUN touch /usr/local/etc/php/conf.d/swoole.ini && \
-    echo 'extension=swoole.so' > /usr/local/etc/php/conf.d/swoole.ini
+    echo 'extension=swoole.so' > /usr/local/etc/php/conf.d/swoole.ini && \
+    touch /usr/local/etc/php/conf.d/inotify.ini && \
+    echo 'extension=inotify.so' > /usr/local/etc/php/conf.d/inotify.ini
 
 ADD conf/supervisord.conf /etc/supervisord.conf
+
+
 
 # Copy our nginx config
 RUN rm -Rf /etc/nginx/nginx.conf
